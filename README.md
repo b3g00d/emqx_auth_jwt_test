@@ -1,4 +1,3 @@
-
 # emqx-auth-jwt
 
 EMQ X JWT Authentication Plugin
@@ -88,3 +87,5 @@ Author
 ------
 
 EMQ X Team.
+=======
+# emqx_auth_jwt_test
