@@ -22,15 +22,15 @@
 -logger_header("[JWT]").
 
 -export([ register_metrics/0
-        , check/3
-        , description/0
+          , check/3
+          , description/0
         ]).
 
 -record(auth_metrics, {
-        success = 'client.auth.success',
-        failure = 'client.auth.failure',
-        ignore = 'client.auth.ignore'
-    }).
+          success = 'client.auth.success',
+          failure = 'client.auth.failure',
+          ignore = 'client.auth.ignore'
+         }).
 
 -define(METRICS(Type), tl(tuple_to_list(#Type{}))).
 -define(METRICS(Type, K), #Type{}#Type.K).
@@ -137,15 +137,15 @@ do_verify_claims([{Key, Expected} | L], Claims) ->
     io:format("Client(~s) Type ~s connect, ConnInfo: ~s Type ~s ~n", [Key, Expected, is_list(Key), is_binary(Expected)]),
 
     case Key of
-        "uid" -> io:format("Jump here with value~n"),
-                 case list_to_binary(integer_to_list(maps:get(Key, Claims, undefined))) =:= Expected of
-                    true -> do_verify_claims(L, Claims);
-                    false -> {error, {verify_claim_failed, Key}}
-                 end;
-        _     -> case maps:get(Key, Claims, undefined) =:= Expected of
-                    true -> do_verify_claims(L, Claims);
-                    false -> {error, {verify_claim_failed, Key}}
-                end
+        uid -> io:format("Jump here with value~n"),
+               case list_to_binary(integer_to_list(maps:get(Key, Claims, undefined))) =:= Expected of
+                   true -> do_verify_claims(L, Claims);
+                   false -> {error, {verify_claim_failed, Key}}
+               end;
+        _ -> case maps:get(Key, Claims, undefined) =:= Expected of
+                 true -> do_verify_claims(L, Claims);
+                 false -> {error, {verify_claim_failed, Key}}
+             end
     end.
 
 feedvar(Checklists, #{username := Username, clientid := ClientId}) ->
