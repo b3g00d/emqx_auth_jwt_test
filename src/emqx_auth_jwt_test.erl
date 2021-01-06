@@ -52,10 +52,7 @@ check(ClientInfo, AuthResult, Env = #{from := From, checklists := Checklists}) -
             ok = emqx_metrics:inc(?AUTH_METRICS(ignore)),
             {ok, AuthResult#{auth_result => token_undefined, anonymous => false}};
         {ok, BearerToken} ->
-            BearerTokenString = binary_to_list(BearerToken),
-            TokenString = lists:last(string:split(BearerTokenString, " ")),
-            Token = list_to_binary(TokenString),
-            io:format("BearerTokenString(~s) connect, Token ~s~n",[BearerTokenString, TokenString]),
+            Token = lists:last(binary:split(BearerToken, <<" ">>)),
             try jwerl:header(Token) of
                 Headers ->
                     case verify_token(Headers, Token, Env) of
