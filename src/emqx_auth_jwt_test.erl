@@ -134,10 +134,11 @@ verify_claims(Checklists, Claims, ClientInfo) ->
 do_verify_claims([], _Claims) ->
     ok;
 do_verify_claims([{Key, Expected} | L], Claims) ->
-    io:format("Client(~s) connect, ConnInfo: ~s~n", [Key, Expected]),
+    io:format("Client(~s) Type ~s connect, ConnInfo: ~s Type ~s ~n", [Key, Expected, is_list(Key), is_binary(Expected)]),
 
     case Key of
-        "uid" -> case list_to_binary(integer_to_list(maps:get(Key, Claims, undefined))) =:= Expected of
+        "uid" -> io:format("Jump here with value~n"),
+                 case list_to_binary(integer_to_list(maps:get(Key, Claims, undefined))) =:= Expected of
                     true -> do_verify_claims(L, Claims);
                     false -> {error, {verify_claim_failed, Key}}
                  end;
