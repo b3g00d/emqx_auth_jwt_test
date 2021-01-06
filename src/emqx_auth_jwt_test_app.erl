@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_jwt_app).
+-module(emqx_auth_jwt_test_app).
 
 -behaviour(application).
 
@@ -26,12 +26,12 @@
 
 -export([init/1]).
 
--define(APP, emqx_auth_jwt).
+-define(APP, emqx_auth_jwt_test).
 
--define(JWT_ACTION, {emqx_auth_jwt, check, [auth_env()]}).
+-define(JWT_ACTION, {emqx_auth_jwt_test, check, [auth_env()]}).
 
 start(_Type, _Args) ->
-    ok = emqx_auth_jwt:register_metrics(),
+    ok = emqx_auth_jwt_test:register_metrics(),
     emqx:hook('client.authenticate', ?JWT_ACTION),
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 

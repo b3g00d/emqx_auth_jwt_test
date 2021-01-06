@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_jwt_SUITE).
+-module(emqx_auth_jwt_test_SUITE).
 
 -compile(nowarn_export_all).
 -compile(export_all).
@@ -23,13 +23,13 @@
 -include_lib("eunit/include/eunit.hrl").
 -include_lib("common_test/include/ct.hrl").
 
--define(APP, emqx_auth_jwt).
+-define(APP, emqx_auth_jwt_test).
 
 all() ->
-    [{group, emqx_auth_jwt}].
+    [{group, emqx_auth_jwt_test}].
 
 groups() ->
-    [{emqx_auth_jwt, [sequence], [ t_check_auth
+    [{emqx_auth_jwt_test, [sequence], [ t_check_auth
                                  , t_check_claims
                                  , t_check_claims_clientid
                                  , t_check_claims_username
@@ -37,11 +37,11 @@ groups() ->
     ].
 
 init_per_suite(Config) ->
-    emqx_ct_helpers:start_apps([emqx, emqx_auth_jwt], fun set_special_configs/1),
+    emqx_ct_helpers:start_apps([emqx, emqx_auth_jwt_test], fun set_special_configs/1),
     Config.
 
 end_per_suite(_Config) ->
-    emqx_ct_helpers:stop_apps([emqx_auth_jwt, emqx]).
+    emqx_ct_helpers:stop_apps([emqx_auth_jwt_test, emqx]).
 
 set_special_configs(emqx) ->
     application:set_env(emqx, allow_anonymous, false),
@@ -54,9 +54,9 @@ set_special_configs(emqx) ->
     application:set_env(emqx, acl_file,
                         emqx_ct_helpers:deps_path(emqx, AclFilePath));
 
-set_special_configs(emqx_auth_jwt) ->
-    application:set_env(emqx_auth_jwt, secret, "emqxsecret"),
-    application:set_env(emqx_auth_jwt, from, password);
+set_special_configs(emqx_auth_jwt_test) ->
+    application:set_env(emqx_auth_jwt_test, secret, "emqxsecret"),
+    application:set_env(emqx_auth_jwt_test, from, password);
 
 set_special_configs(_) ->
     ok.
@@ -90,7 +90,7 @@ t_check_auth(_) ->
     ?assertMatch({error, _}, emqx_access_control:authenticate(Plain#{password => <<"asd">>})).
 
 t_check_claims(_) ->
-    application:set_env(emqx_auth_jwt, verify_claims, [{sub, <<"value">>}]),
+    application:set_env(emqx_auth_jwt_test, verify_claims, [{sub, <<"value">>}]),
     Plain = #{clientid => <<"client1">>, username => <<"plain">>, zone => external},
     Jwt = jwerl:sign([{clientid, <<"client1">>},
                       {username, <<"plain">>},
@@ -106,7 +106,7 @@ t_check_claims(_) ->
     ?assertEqual({error, invalid_signature}, Result2).
 
 t_check_claims_clientid(_) ->
-    application:set_env(emqx_auth_jwt, verify_claims, [{clientid, <<"%c">>}]),
+    application:set_env(emqx_auth_jwt_test, verify_claims, [{clientid, <<"%c">>}]),
     Plain = #{clientid => <<"client23">>, username => <<"plain">>, zone => external},
     Jwt = jwerl:sign([{clientid, <<"client23">>},
                       {username, <<"plain">>},
@@ -121,7 +121,7 @@ t_check_claims_clientid(_) ->
     ?assertEqual({error, invalid_signature}, Result2).
 
 t_check_claims_username(_) ->
-    application:set_env(emqx_auth_jwt, verify_claims, [{username, <<"%u">>}]),
+    application:set_env(emqx_auth_jwt_test, verify_claims, [{username, <<"%u">>}]),
     Plain = #{clientid => <<"client23">>, username => <<"plain">>, zone => external},
     Jwt = jwerl:sign([{clientid, <<"client23">>},
                       {username, <<"plain">>},

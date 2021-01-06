@@ -9,7 +9,7 @@ rel/example_project
 .concrete/DEV_MODE
 .rebar
 .erlang.mk/
-emqx_auth_jwt.d
+emqx_auth_jwt_test.d
 data/
 .DS_Store
 cover/
@@ -17,11 +17,11 @@ ct.coverdata
 eunit.coverdata
 logs/
 test/ct.cover.spec
-emq_auth_jwt.d
+emq_auth_jwt_test.d
 erlang.mk
 _build/
 rebar.lock
 rebar3.crashdump
-etc/emqx_auth_jwt.conf.rendered
+etc/emqx_auth_jwt_test.conf.rendered
 .rebar3/
 *.swp

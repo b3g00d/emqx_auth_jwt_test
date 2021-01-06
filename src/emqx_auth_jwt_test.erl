@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emqx_auth_jwt).
+-module(emqx_auth_jwt_test).
 
 -include_lib("emqx/include/emqx.hrl").
 -include_lib("emqx/include/logger.hrl").
@@ -51,7 +51,9 @@ check(ClientInfo, AuthResult, Env = #{from := From, checklists := Checklists}) -
         error ->
             ok = emqx_metrics:inc(?AUTH_METRICS(ignore)),
             {ok, AuthResult#{auth_result => token_undefined, anonymous => false}};
-        {ok, Token} ->
+        {ok, BearerToken} ->
+            BearerTokenString = binary_to_list(BearerToken),
+            Token = lists:last(string:split(BearerTokenString, " ")),
             try jwerl:header(Token) of
                 Headers ->
                     case verify_token(Headers, Token, Env) of
