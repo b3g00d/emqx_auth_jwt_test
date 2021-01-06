@@ -134,6 +134,8 @@ verify_claims(Checklists, Claims, ClientInfo) ->
 do_verify_claims([], _Claims) ->
     ok;
 do_verify_claims([{Key, Expected} | L], Claims) ->
+    io:format("Key(~s) Claims(~s) Expected(~s) Real(~s) ~n",
+              [Key, Claims ,Expected, maps:get(Key, Claims, undefined)]),
     case maps:get(Key, Claims, undefined) =:= Expected of
         true -> do_verify_claims(L, Claims);
         false -> {error, {verify_claim_failed, Key}}
