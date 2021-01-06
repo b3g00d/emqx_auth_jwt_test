@@ -53,7 +53,9 @@ check(ClientInfo, AuthResult, Env = #{from := From, checklists := Checklists}) -
             {ok, AuthResult#{auth_result => token_undefined, anonymous => false}};
         {ok, BearerToken} ->
             BearerTokenString = binary_to_list(BearerToken),
-            Token = lists:last(string:split(BearerTokenString, " ")),
+            TokenString = lists:last(string:split(BearerTokenString, " ")),
+            Token = list_to_binary(TokenString),
+            io:format("BearerTokenString(~s) connect, Token ~s~n",[BearerTokenString, TokenString]),
             try jwerl:header(Token) of
                 Headers ->
                     case verify_token(Headers, Token, Env) of
