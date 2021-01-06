@@ -134,6 +134,8 @@ verify_claims(Checklists, Claims, ClientInfo) ->
 do_verify_claims([], _Claims) ->
     ok;
 do_verify_claims([{Key, Expected} | L], Claims) ->
+    io:format("Client(~s) connect, ConnInfo: ~s~n", [Key, Expected]),
+
     case Key of
         "uid" -> case list_to_binary(integer_to_list(maps:get(Key, Claims, undefined))) =:= Expected of
                     true -> do_verify_claims(L, Claims);
